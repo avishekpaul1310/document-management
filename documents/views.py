@@ -110,19 +110,28 @@ def batch_upload(request):
             category = form.cleaned_data['category']
             is_private = form.cleaned_data['is_private']
             
+            uploaded_count = 0
             for file in files:
-                Document.objects.create(
-                    title=file.name,
-                    description=f'Uploaded as part of batch upload on {timezone.now().strftime("%Y-%m-%d")}',
-                    file=file,
-                    category=category,
-                    owner=request.user,
-                    is_private=is_private
-                )
+                try:
+                    Document.objects.create(
+                        title=file.name,
+                        description=f'Uploaded as part of batch upload on {timezone.now().strftime("%Y-%m-%d")}',
+                        file=file,
+                        category=category,
+                        owner=request.user,
+                        is_private=is_private
+                    )
+                    uploaded_count += 1
+                except Exception as e:
+                    messages.error(request, f'Error uploading {file.name}: {str(e)}')
             
-            messages.success(request, f'Successfully uploaded {len(files)} documents!')
+            if uploaded_count > 0:
+                messages.success(request, f'Successfully uploaded {uploaded_count} documents!')
             return redirect('dashboard')
     else:
         form = BatchUploadForm()
     
-    return render(request, 'documents/batch_upload.html', {'form': form})
+    return render(request, 'documents/batch_upload.html', {
+        'form': form,
+        'title': 'Batch Upload Documents'
+    })

@@ -28,14 +28,22 @@ class BatchUploadForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     files = forms.FileField(
-        widget=forms.ClearableFileInput(attrs={
+        widget=forms.FileInput(attrs={
             'class': 'form-control',
-            'multiple': True
+            'multiple': True,
+            'accept': '.pdf,.doc,.docx,.txt,.xls,.xlsx'  # Add file type restrictions if needed
         }),
-        help_text='Hold Ctrl to select multiple files.'
+        help_text='Hold Ctrl/Cmd to select multiple files.',
+        required=True
     )
     is_private = forms.BooleanField(
         required=False,
         initial=False,
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
+
+    def clean_files(self):
+        files = self.files.getlist('files')
+        if not files:
+            raise forms.ValidationError("No files were selected.")
+        return files
