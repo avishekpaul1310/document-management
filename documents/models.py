@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.conf import settings
 import os
 
 def validate_file_type(value):
@@ -43,3 +45,28 @@ class Document(models.Model):
             if os.path.isfile(self.file.path):
                 os.remove(self.file.path)
         super().delete(*args, **kwargs)
+
+    def send_upload_notification(self):
+        subject = 'New Document Uploaded'
+        message = f"""
+        A new document has been uploaded to your account:
+        
+        Title: {self.title}
+        Category: {self.category}
+        Upload Date: {self.uploaded_at.strftime('%Y-%m-%d %H:%M')}
+        
+        You can view it on your dashboard.
+        """
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [self.owner.email],
+            fail_silently=True,
+        )
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        if is_new:
+            self.send_upload_notification()
