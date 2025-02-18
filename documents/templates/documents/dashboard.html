@@ -2,6 +2,41 @@
 {% load document_filters %}
 
 {% block content %}
+<!-- Summary Statistics Box -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="border-end">
+                            <h4 class="mb-1">{{ summary.total_documents }}</h4>
+                            <p class="text-muted mb-0">Total Documents</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border-end">
+                            <h4 class="mb-1">{{ summary.total_categories }}</h4>
+                            <p class="text-muted mb-0">Categories Used</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border-end">
+                            <h4 class="mb-1">{{ summary.recent_uploads }}</h4>
+                            <p class="text-muted mb-0">Uploads (Last 7 Days)</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h4 class="mb-1">{{ summary.private_documents }}</h4>
+                        <p class="text-muted mb-0">Private Documents</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search and Upload Section -->
 <div class="row mb-4">
     <div class="col-md-8">
         <form class="d-flex" method="get">
@@ -20,14 +55,18 @@
         </form>
     </div>
     <div class="col-md-4 text-end">
-        <a href="{% url 'upload_document' %}" class="btn btn-primary">Upload Document</a>
+        <div class="btn-group">
+            <a href="{% url 'upload_document' %}" class="btn btn-primary">Upload Document</a>
+            <a href="{% url 'batch_upload' %}" class="btn btn-primary">Batch Upload</a>
+        </div>
     </div>
 </div>
 
+<!-- Documents Grid -->
 <div class="row">
     {% for document in documents %}
         <div class="col-md-4 mb-4">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">{{ document.title }}</h5>
                     <p class="card-text">{{ document.description|truncatewords:20 }}</p>
@@ -60,7 +99,9 @@
         </div>
     {% empty %}
         <div class="col-12">
-            <p class="text-center">No documents found.</p>
+            <div class="alert alert-info text-center">
+                No documents found. {% if query or selected_category %}Try adjusting your search criteria.{% endif %}
+            </div>
         </div>
     {% endfor %}
 </div>

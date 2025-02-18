@@ -142,5 +142,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'avishekpaul1310@gmail.com'  
-EMAIL_HOST_PASSWORD = 'your-app-specific-password'  # Use app-specific password for security
+EMAIL_HOST_PASSWORD = 'fqro mkri yojk lesj'
 DEFAULT_FROM_EMAIL = 'Document Management System <your-email@gmail.com>'
