@@ -26,6 +26,9 @@ SECRET_KEY = 'django-insecure-rxnj(_#&r(1f_p$or0wys)l*yc&av_s+5x-8cd44h4mmobd0@)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Add this at the top with your other settings
+SITE_DOMAIN = 'localhost:8000'  # Change this in production to your actual domain
+
 ALLOWED_HOSTS = []
 
 

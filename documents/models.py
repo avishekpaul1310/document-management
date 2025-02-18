@@ -54,6 +54,9 @@ class Document(models.Model):
             logger.warning(f"No email address for user {self.owner.username}")
             return
 
+        site_domain = getattr(settings, 'SITE_DOMAIN', 'localhost:8000')
+        document_url = f"http://{site_domain}/document/{self.pk}/"
+
         subject = f'New Document Uploaded: {self.title}'
         message = f"""
         Hello {self.owner.username},
@@ -66,7 +69,7 @@ class Document(models.Model):
         Privacy: {'Private' if self.is_private else 'Public'}
 
         You can view it on your dashboard at:
-        http://yourdomain.com/document/{self.pk}/
+        {document_url}
 
         Best regards,
         Document Management System
