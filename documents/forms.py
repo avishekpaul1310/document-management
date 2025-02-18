@@ -22,23 +22,3 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
-class BatchUploadForm(forms.Form):
-    category = forms.ModelChoiceField(
-        queryset=Category.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        label='Category'
-    )
-    files = forms.FileField(
-        widget=forms.FileInput(attrs={
-            'class': 'form-control',
-            'multiple': True,
-            'accept': '.pdf,.doc,.docx,.txt,.xls,.xlsx'
-        }),
-        label='Select Files'
-    )
-    is_private = forms.BooleanField(
-        required=False,
-        initial=False,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-        label='Make Private'
-    )

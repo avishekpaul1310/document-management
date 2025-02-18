@@ -6,5 +6,5 @@ urlpatterns = [
     path('upload/', views.upload_document, name='upload_document'),
     path('document/<int:pk>/', views.document_detail, name='document_detail'),
     path('document/<int:pk>/delete/', views.delete_document, name='delete_document'),
-    path('batch-upload/', views.batch_upload, name='batch_upload'),
+    path('register/', views.register, name='register'),
 ]

@@ -38,7 +38,7 @@
 
 <!-- Search and Upload Section -->
 <div class="row mb-4">
-    <div class="col-md-8">
+    <div class="col-md-9">
         <form class="d-flex" method="get">
             <input class="form-control me-2" type="search" placeholder="Search documents..." 
                    name="q" value="{{ query }}">
@@ -54,11 +54,8 @@
             <button class="btn btn-outline-primary" type="submit">Search</button>
         </form>
     </div>
-    <div class="col-md-4 text-end">
-        <div class="btn-group">
-            <a href="{% url 'upload_document' %}" class="btn btn-primary">Upload Document</a>
-            <a href="{% url 'batch_upload' %}" class="btn btn-primary">Batch Upload</a>
-        </div>
+    <div class="col-md-3 text-end">
+        <a href="{% url 'upload_document' %}" class="btn btn-primary">Upload Document</a>
     </div>
 </div>
 
@@ -87,10 +84,10 @@
                         </div>
                         <div>
                             {% if document.owner == request.user %}
-                                <span class="btn btn-info disabled">Owner</span>
+                                <span class="badge bg-info">Owner</span>
                             {% endif %}
                             {% if document.is_private %}
-                                <span class="btn btn-warning disabled">Private</span>
+                                <span class="badge bg-warning">Private</span>
                             {% endif %}
                         </div>
                     </div>
