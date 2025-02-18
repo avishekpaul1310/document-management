@@ -3,7 +3,10 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.conf import settings
+import logging
 import os
+
+logger = logging.getLogger(__name__)
 
 def validate_file_type(value):
     # Get the file extension
@@ -47,23 +50,42 @@ class Document(models.Model):
         super().delete(*args, **kwargs)
 
     def send_upload_notification(self):
-        subject = 'New Document Uploaded'
+        if not self.owner.email:
+            logger.warning(f"No email address for user {self.owner.username}")
+            return
+
+        subject = f'New Document Uploaded: {self.title}'
         message = f"""
+        Hello {self.owner.username},
+
         A new document has been uploaded to your account:
-        
+
         Title: {self.title}
         Category: {self.category}
         Upload Date: {self.uploaded_at.strftime('%Y-%m-%d %H:%M')}
-        
-        You can view it on your dashboard.
+        Privacy: {'Private' if self.is_private else 'Public'}
+
+        You can view it on your dashboard at:
+        http://yourdomain.com/document/{self.pk}/
+
+        Best regards,
+        Document Management System
         """
-        send_mail(
-            subject,
-            message,
-            settings.DEFAULT_FROM_EMAIL,
-            [self.owner.email],
-            fail_silently=True,
-        )
+        
+        try:
+            sent = send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [self.owner.email],
+                fail_silently=False,
+            )
+            if sent:
+                logger.info(f"Email notification sent for document {self.title} to {self.owner.email}")
+            else:
+                logger.error(f"Failed to send email notification for document {self.title}")
+        except Exception as e:
+            logger.error(f"Error sending email notification: {str(e)}")
 
     def save(self, *args, **kwargs):
         is_new = self.pk is None
