@@ -105,12 +105,15 @@ def delete_document(request, pk):
 def batch_upload(request):
     if request.method == 'POST':
         form = BatchUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            files = request.FILES.getlist('files')
+        files = request.FILES.getlist('files')  # Get the list of files
+        
+        if form.is_valid() and files:  # Check if files were uploaded
             category = form.cleaned_data['category']
             is_private = form.cleaned_data['is_private']
             
-            uploaded_count = 0
+            success_count = 0
+            error_count = 0
+            
             for file in files:
                 try:
                     Document.objects.create(
@@ -121,12 +124,16 @@ def batch_upload(request):
                         owner=request.user,
                         is_private=is_private
                     )
-                    uploaded_count += 1
+                    success_count += 1
                 except Exception as e:
+                    error_count += 1
                     messages.error(request, f'Error uploading {file.name}: {str(e)}')
             
-            if uploaded_count > 0:
-                messages.success(request, f'Successfully uploaded {uploaded_count} documents!')
+            if success_count > 0:
+                messages.success(request, f'Successfully uploaded {success_count} document(s)!')
+            if error_count > 0:
+                messages.warning(request, f'Failed to upload {error_count} document(s).')
+            
             return redirect('dashboard')
     else:
         form = BatchUploadForm()
