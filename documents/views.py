@@ -102,12 +102,13 @@ def delete_document(request, pk):
     
     return render(request, 'documents/document_delete.html', {'document': document})
 
+@login_required
 def batch_upload(request):
     if request.method == 'POST':
-        form = BatchUploadForm(request.POST, request.FILES)
-        files = request.FILES.getlist('files')  # Get the list of files
+        form = BatchUploadForm(request.POST)
+        files = request.FILES.getlist('files')
         
-        if form.is_valid() and files:  # Check if files were uploaded
+        if form.is_valid() and files:
             category = form.cleaned_data['category']
             is_private = form.cleaned_data['is_private']
             

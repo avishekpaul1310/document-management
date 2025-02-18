@@ -29,7 +29,7 @@ class BatchUploadForm(forms.Form):
         label='Category'
     )
     files = forms.FileField(
-        widget=forms.ClearableFileInput(attrs={
+        widget=forms.FileInput(attrs={
             'class': 'form-control',
             'multiple': True,
             'accept': '.pdf,.doc,.docx,.txt,.xls,.xlsx'

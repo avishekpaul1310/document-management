@@ -6,32 +6,51 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mb-0">Batch Upload Documents</h2>
+                    <h2 class="mb-0">{{ title }}</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                {{ form.non_field_errors }}
-                            </div>
-                        {% endif %}
-                        
-                        {% for field in form %}
-                            <div class="mb-3">
-                                <label class="form-label">{{ field.label }}</label>
-                                {{ field }}
-                                {% if field.help_text %}
-                                    <small class="text-muted d-block">{{ field.help_text }}</small>
-                                {% endif %}
-                                {% if field.errors %}
-                                    <div class="text-danger">
-                                        {{ field.errors }}
-                                    </div>
-                                {% endif %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
                             </div>
                         {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
                         
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.category.label }}</label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <div class="text-danger">
+                                    {{ form.category.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.files.label }}</label>
+                            <input type="file" name="files" multiple class="form-control" 
+                                   accept=".pdf,.doc,.docx,.txt,.xls,.xlsx">
+                            {% if form.files.errors %}
+                                <div class="text-danger">
+                                    {{ form.files.errors }}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Hold Ctrl/Cmd to select multiple files</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_private }}
+                                <label class="form-check-label">
+                                    {{ form.is_private.label }}
+                                </label>
+                            </div>
+                        </div>
+
                         <div class="mt-4">
                             <button type="submit" class="btn btn-primary">Upload Files</button>
                             <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
