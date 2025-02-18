@@ -4,7 +4,7 @@ from django.db.models import Q, Count
 from django.http import HttpResponseForbidden
 from django.contrib import messages
 from .models import Document, Category
-from .forms import DocumentForm, UserRegistrationForm, BatchUploadForm
+from .forms import DocumentForm, UserRegistrationForm
 from django.utils import timezone
 from datetime import timedelta
 
